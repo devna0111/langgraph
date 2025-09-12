@@ -26,3 +26,4 @@
 - 양자화 방법
    1. Post-training Quantization : 학습 후 양자화(PTQ), 이미 완성된 모델을 압축
    2. Quantization-aware Training : 학습 중 양자화 고려(QAT), 처음부터 양자화를 염두에 두고 학습하는 방법
+- 현재 작업 환경 : RTX4060 VRAM 8gb, 사용 예정 llm은 Qwen2.5:7b 모델로 원활한 서비스를 위해 PTQ로 INT8 양자화(예상 필요 VRAM ~7gb)
