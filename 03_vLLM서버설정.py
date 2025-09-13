@@ -1,5 +1,8 @@
 """
 vLLM 라이브러리 다운로드 가정 => 만약 없다면 pip install vllm 필요
+***[Hugging Face] 모델만 연동이 가능***
+따라서 모델을 허깅페이스에 올려서 사용하며
+아래는 우선 ollama 모델을 통해 ai agent 이해용
 Ollama 설치 가정, 미설치 시 홈페이지에서 다운로드 요망
 Ollama 설치 시 자동 실행 가정 => 만약 실행중이지 않다면 ollama serve
 """
