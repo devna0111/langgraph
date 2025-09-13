@@ -1,0 +1,9 @@
+{
+  "model": "devna0111-7b-q4",
+  "host": "0.0.0.0",
+  "port": 8000,
+  "served-model-name": "test",
+  "max-model-len": 4096,
+  "gpu-memory-utilization": 0.8,
+  "trust-remote-code": true
+}

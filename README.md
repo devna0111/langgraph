@@ -27,3 +27,29 @@
    1. Post-training Quantization : 학습 후 양자화(PTQ), 이미 완성된 모델을 압축
    2. Quantization-aware Training : 학습 중 양자화 고려(QAT), 처음부터 양자화를 염두에 두고 학습하는 방법
 - 현재 작업 환경 : RTX4060 VRAM 8gb, 사용 예정 llm은 Qwen2.5:7b 모델로 원활한 서비스를 위해 PTQ로 INT8 양자화(예상 필요 VRAM ~7gb)
+
+## Modelfile(01 ~ 03_*.py) 내용 요약
+- 기존 원본 모델(FP16/FP32) => Modelfile을 통해 설정만 변경한 것으로 양자화 모델은 아님
+- 양자화는 transformers + BitsAndBytes => GGUF => Ollama 방식으로 모델을 서브해야함
+
+## 학습 과정 요약
+
+**주 1-2: 초급 기능**
+ |기초 다지기|
+Ollama + LangGraph로 간단한 Agent 구현
+Tool 사용법 습득 (계산기, 웹검색 등)
+
+**주 3-4: 중급 기능**
+|멀티 Agent 협업|
+|RAG 시스템 구축|
+|성능 측정 시작|
+
+**주 5-6: vLLM 도입**
+|HuggingFace 원본 모델로 vLLM 서버 구축|
+|API 서버 최적화|
+|로드 테스트|
+
+**주 7-8: 프로덕션 배포**
+|Docker 컨테이너화|
+|모니터링 시스템|
+|실제 서비스 배포|
