@@ -9,7 +9,7 @@ def create_conditional_agent():
     try:
         from langgraph.graph import StateGraph, END
         from langchain_community.llms import Ollama
-        from typing import TypedDict
+        from typing import TypedDict # 딕셔너리.
         import re
         
         # 1. State 정의 - 더 많은 정보 추가
@@ -135,7 +135,7 @@ def create_conditional_agent():
         workflow.add_node("general", general_chat_node)
         
         # 시작점 설정
-        workflow.set_entry_point("analyze")
+        workflow.set_entry_point("analyze") # 의도 분석으로 시작
         
         # 조건부 엣지 추가 - 핵심!
         workflow.add_conditional_edges(
@@ -149,7 +149,7 @@ def create_conditional_agent():
             }
         )
         
-        # 모든 처리 노드에서 END로
+        # 모든 처리 노드에서 END => END 포인트
         workflow.add_edge("greeting", END)
         workflow.add_edge("question", END)
         workflow.add_edge("help", END)
@@ -176,9 +176,10 @@ def test_conditional_agent():
     # 테스트 케이스들
     test_cases = [
         "안녕하세요!",
-        "Langgraph에 대해 질문이 있어요",
+        # "Langgraph에 대해 질문이 있어요",
         "도움이 필요해요",
-        "오늘 날씨가 좋네요"
+        "오늘 날씨가 좋네요",
+        "심재성이 누군 지 아나요?"
     ]
     
     for i, test_input in enumerate(test_cases, 1):
@@ -194,7 +195,7 @@ def test_conditional_agent():
         })
         
         print(f"의도 분류: {result['user_intent']}")
-        print(f"응답: {result['messages'][-1][:100]}...")  # 처음 100자만
+        print(f"응답: {result['messages'][-1]}...")  # 처음 100자만
         print(f"최종 단계: {result['current_step']}")
 
 def explain_conditional_routing():
