@@ -28,28 +28,45 @@
    2. Quantization-aware Training : 학습 중 양자화 고려(QAT), 처음부터 양자화를 염두에 두고 학습하는 방법
 - 현재 작업 환경 : RTX4060 VRAM 8gb, 사용 예정 llm은 Qwen2.5:7b 모델로 원활한 서비스를 위해 PTQ로 INT8 양자화(예상 필요 VRAM ~7gb)
 
-## Modelfile(01 ~ 03_*.py) 내용 요약
-- 기존 원본 모델(FP16/FP32) => Modelfile을 통해 설정만 변경한 것으로 양자화 모델은 아님
-- 양자화는 transformers + BitsAndBytes => GGUF => Ollama 방식으로 모델을 서브해야함
+## 랭그래프의 기본 개념와 구조
+### 랭그래프의 기본 개념
+- LangGraph는 자연어 처리(NLP) 기반의 언어 **그래프** 서비스 플랫폼
+```
+   StateGraph: 상태를 가진 그래프. Agent의 메모리 역할
+   Node: 작업을 수행하는 함수. 각 단계별 처리 담당
+   Edge: Node 간 연결. 작업 흐름 정의
+   State: Agent가 기억하는 정보. 대화 내용, 중간 결과 등
+   END: 그래프 종료 지점
+```
+### 랭그래프의 구조
+   1. State 정의 (무엇을 기억할지)
+   2. Node 함수 작성 (각 단계별 처리)
+   3. Graph 구성 (흐름 설계)
+   4. 컴파일 및 실행
+
+### 랭그래프의 조건부 엣지(Conditional Edge)
+- 조건부 엣지는 입력에 따라 다른 노드로 분기하는 기능
+- add_conditional_edges() 메소드를 사용하여 조건부 엣지를 추가
+- 라우터함수가 어떤 노드로 갈 지 결정
 
 ## 학습 과정 요약
 
 **주 1-2: 초급 기능**
- |기초 다지기|
+-기초 다지기
 Ollama + LangGraph로 간단한 Agent 구현
 Tool 사용법 습득 (계산기, 웹검색 등)
 
 **주 3-4: 중급 기능**
-|멀티 Agent 협업|
-|RAG 시스템 구축|
-|성능 측정 시작|
+- 멀티 Agent 협업
+- RAG 시스템 구축
+- 성능 측정 시작
 
 **주 5-6: vLLM 도입**
-|HuggingFace 원본 모델로 vLLM 서버 구축|
-|API 서버 최적화|
-|로드 테스트|
+- HuggingFace 원본 모델로 vLLM 서버 구축
+- API 서버 최적화
+- 로드 테스트
 
 **주 7-8: 프로덕션 배포**
-|Docker 컨테이너화|
-|모니터링 시스템|
-|실제 서비스 배포|
+- Docker 컨테이너화
+- 모니터링 시스템
+- 실제 서비스 배포
