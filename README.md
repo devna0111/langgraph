@@ -69,6 +69,43 @@ memory_content = memory.load_memory_variables({})
    4. 안정성: 검증된 라이브러리 활용
 ```
 
+### Tool-Using Agent / Function Calling Agent
+- LLM에게 tool을 부여하여 다양한 상호작용으로 유연한 반응을 이끌어 낼 수 있음 : 기존 Function Calling이나 langchain.agents.Tool 객체
+- 그러나 랭그래프의 node를 통해서도 tool 기능을 부여할 수 있음 => State에 담아서 전달 하는 등
+- 두 방법의 각각의 장단점
+```
+- Langgraph Node 방식
+- 예시 : 연구 Agent(LLM+검색) → 분석 Agent(LLM+계산) → 작가 Agent(LLM+글쓰기)
+   - 장점: 각 Agent가 창의적 판단
+   - 단점: 리소스 소모 높음 (LLM 호출 9-12회)
+
+- Langchain.agents.Tool 방식
+- 예시 : 검색 함수 → LLM 분석 → 계산 함수 → LLM 작성
+   - 장점: 리소스 소모 적음 (LLM 호출 2~3회 정도) 
+   - 단점: 유연성 부족
+```
+- 이런 두 방식의 장점을 극대화하는 **하이브리드 방식**을 선호
+```
+- 예시 : 연구 Agent(LLM+검색) → 계산 함수 → 작가 Agent(LLM+글쓰기)
+- 장점: 비용 효율 + 적절한 창의성
+- 핵심: 필요한 곳에만 LLM 사용
+```
+- **실무 결정 기준**
+
+- LLM Agent를 쓸 때:
+```
+   - 복잡한 판단이 필요할 때
+   - 창의적 작업일 때
+   - 사용자 의도 파악이 중요할 때
+```
+
+- 함수 노드를 쓸 때:
+```
+   - 정해진 로직으로 처리 가능할 때
+   - 속도가 중요할 때
+   - 비용을 절약하고 싶을 때
+```
+
 ## 학습 과정 요약
 
 **주 1-2: 초급 기능**
