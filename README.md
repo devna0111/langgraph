@@ -49,6 +49,26 @@
 - add_conditional_edges() 메소드를 사용하여 조건부 엣지를 추가
 - 라우터함수가 어떤 노드로 갈 지 결정
 
+### 대화 history 저장을 통한 메모리 agent
+- **langchain**과 동일하게 **langchain.memory.ConversationBufferMemory**를 사용하여 대화 자동 저장
+```
+# 사용자 메시지 저장
+memory.chat_memory.add_user_message(user_message)
+
+# AI 응답 저장  
+memory.chat_memory.add_ai_message(response)
+
+# 저장된 대화 불러오기
+memory_content = memory.load_memory_variables({})
+```
+- **핵심 장점**
+```
+   1. 자동 메모리 관리: 수동 구현 없이 LangChain이 처리
+   2. 표준화: LangChain 표준 인터페이스 활용
+   3. 확장성: 다른 LangChain 컴포넌트와 쉽게 연동
+   4. 안정성: 검증된 라이브러리 활용
+```
+
 ## 학습 과정 요약
 
 **주 1-2: 초급 기능**
