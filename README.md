@@ -43,6 +43,15 @@
    2. Node 함수 작성 (각 단계별 처리)
    3. Graph 구성 (흐름 설계)
    4. 컴파일 및 실행
+   5. 그래프 빌드 순서
+   ```
+   workflow = StateGraph(CustomerState)  # 1. 그래프 생성
+   workflow.add_node()                   # 2. 노드 추가
+   workflow.set_entry_point()            # 3. 시작점 설정
+   workflow.add_conditional_edges()      # 4. 조건부 엣지
+   workflow.add_edge()                   # 5. 일반 엣지
+   app = workflow.compile()              # 6. 컴파일
+   ```
 
 ### **랭그래프의 조건부 엣지(Conditional Edge)**
 - 조건부 엣지는 입력에 따라 다른 노드로 분기하는 기능
@@ -70,6 +79,31 @@
    )
 
 ```
+
+### 랭그래프의 시각화
+- 랭그래프 시각화는 크게 세 가지 방법이 있음
+   1. **Mermaid 다이어그램** : 특정 코드를 반환하며 이를 https://mermaid.live에 붙여넣기 하면 시각화 가능
+      ```
+      print(app.get_graph().draw_mermaid())
+      ```
+   2. **PNG 이미지 저장** : 파일로 저장하나 WSL의 경우 graphbiz가 필요
+      ```
+      [저장 방식]
+      png_data = app.get_graph().draw_mermaid_png()
+      with open("workflow_graph.png", "wb") as f:
+         f.write(png_data)
+
+      [Graphviz 설치]
+      Linux cmd
+         sudo apt-get update
+         sudo apt-get install graphviz
+      python cmd
+         pip install pygraphviz
+      ```
+   3. ASCII 아트 : 개발자가 확인하기 용이한, 터미널에서 즉시 확인이 가능한 방식
+      ```
+      print(app.get_graph().draw_ascii())
+      ```
 
 ### 대화 history 저장을 통한 메모리 agent
 - **langchain**과 동일하게 **langchain.memory.ConversationBufferMemory**를 사용하여 대화 자동 저장
@@ -159,24 +193,69 @@ memory_content = memory.load_memory_variables({})
 ```
 - 다만, LLM 추론 시간이 과정마다 발생하고 활용하는 리소스의 양이 많아지는 등 시간적, 경제적, 물리적 한계가 발생 가능
 
-## 학습 과정 요약
+### 02_멀티에이전트협업.02_실습_고객문의처리시스템.py 아키택쳐 및 실행 흐름 예시
+```
+[아키택쳐]
+   [최초]
 
-**주 1-2: 초급 기능**
--기초 다지기
-Ollama + LangGraph로 간단한 Agent 구현
-Tool 사용법 습득 (계산기, 웹검색 등)
+      [START]
+         ↓
+      [분류 에이전트] → category 결정
+         ↓
+      [조건부 라우팅]
+         ├─ technical → [기술지원 에이전트]
+         ├─ billing   → [결제 에이전트]
+         └─ general   → [일반 에이전트]
+         ↓
+      [END]
+   
+   [결과물에 따라 retry 가능하도록 수정]
+      retry → route_query → [tech/billing/general] → check_confidence
+            ↑_______________retry________________|
 
-**주 3-4: 중급 기능**
-- 멀티 Agent 협업
-- RAG 시스템 구축
-- 성능 측정 시작
+[실행흐름 예시]
+   [입력]
+   state = {
+      "query": "결제가 안돼요",
+      "category": "",
+      "response": "",
+      "confidence": 0.0
+   }
 
-**주 5-6: vLLM 도입**
-- HuggingFace 원본 모델로 vLLM 서버 구축
-- API 서버 최적화
-- 로드 테스트
+   [실행 순서]
+   1. classifier → category = "billing"
+   2. route_query → "billing" 반환
+   3. billing_agent → response = "결제 문제 해결 방법..."
+   4. LLM에 의한 Confidence 결정
+   5. Confidence에 따른 조건부 라우팅(0.7 기준 성공/실패, 2차례 실패시 상담원 연결의 구조 유도)
+      [성공 케이스]
+      classifier → tech_support (0.85) → END
 
-**주 7-8: 프로덕션 배포**
-- Docker 컨테이너화
-- 모니터링 시스템
-- 실제 서비스 배포
+      [재시도 케이스]
+      classifier → tech_support (0.55) → retry → tech_support (0.78) → END
+
+      [에스컬레이션 케이스]
+      classifier → tech_support (0.50) → retry → tech_support (0.52) → retry → tech_support (0.48) → escalate → END
+   6. END
+```
+
+### 학습 할 것
+- Option A: 휴먼-인-더-루프 (Human-in-the-Loop)
+   - 사람의 승인을 받아야 진행되는 시스템
+   - 활용: 중요한 결정, 민감한 답변
+
+- Option B: 체크포인트 & 상태 저장 
+   - 대화를 중단하고 나중에 이어서 하기
+   - 활용: 긴 작업, 세션 관리
+
+- Option C: 스트리밍 & 실시간 출력
+   - LLM 답변을 실시간으로 출력
+   - 활용: 사용자 경험 개선
+
+- Option D: 그래프 시각화
+   - 현재 워크플로우를 그림으로 보기
+   - 활용: 디버깅, 문서화
+
+- Option E: 복잡한 멀티 에이전트 (계층 구조)
+   - 매니저 에이전트가 여러 워커 에이전트를 관리
+   - 활용: 복잡한 작업 분할
