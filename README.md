@@ -166,25 +166,26 @@ memory_content = memory.load_memory_variables({})
 - 체크포인트는 서버 재시작 시 대화 이어가기
 - 긴 작업 중단 후 나중에 재개
 - 사용자별 세션관리 
-<br>
-[사용 방식]
-```
+</br>
+[사용 방식]</br>
 [저장]
-
+```
 workflow = StateGraph(State:TypedDict)
 ....
 memory = MemorySaver()
 app = workflow.compile(checkpointer=memory)
-
+```
 [저장 상태 조회]
+```
 snapshot = app.get_state(config)
 
 print("=== 저장된 데이터 ===")
 print(f"현재 상태: {snapshot.values}")
 print(f"다음 노드: {snapshot.next}")
 print(f"체크포인트 ID: {snapshot.config['configurable']['checkpoint_id']}")
-
+```
 [전체 히스토리 조회]
+```
 print("\n=== 전체 실행 히스토리 ===")
 for i, state in enumerate(app.get_state_history(config)):
     print(f"\n[{i}] 체크포인트: {state.config['configurable']['checkpoint_id'][:8]}")
@@ -196,12 +197,10 @@ for i, state in enumerate(app.get_state_history(config)):
 [롤백]
 - 예시 : 2단계 전으로 돌아가기
    app.update_state(config, values=None, as_node="classifier")
-
 [디버깅]
 - 어느 단계에서 문제가 생겼는지 추적
    for state in app.get_state_history(config):
       print(state.values)
-
 [작업 재개]
 - 서버 재시작 후에도 같은 지점부터 이어서
    snapshot = app.get_state(config)
