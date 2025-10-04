@@ -424,5 +424,40 @@ for i, state in enumerate(app.get_state_history(config)):
    ```
 - 많은 가능성을 갖고 있는 구조
 
-## 학습 할 것
-- 간단한 프로젝트 실습
+## 심화학습 가능 내용
+   1. 고급 상태 관리
+      - 서브그래프 (Subgraph): 큰 그래프 안에 작은 그래프 넣기
+         ```
+         sub_workflow = StateGraph(SubState)
+         # ... 서브그래프 정의
+         
+         main_workflow.add_node("sub_task", sub_workflow.compile())
+         ```
+      - 병렬 상태 업데이트: 여러 노드가 동시에 다른 상태 필드 수정
+
+   2. 실전 패턴
+      - Plan-and-Execute 패턴: 계획 수립 → 단계별 실행 → 검증
+         ```
+         Planner → Executor → Validator → (재계획 or 완료)
+         ```
+      - Self-Correction 패턴: 에이전트가 자기 출력을 검증하고 수정
+         ```
+         Generator → Critic → Reviser → (재검증 or 완료)
+         ```
+      - Memory-Enhanced Agent: 장기 메모리 + 단기 메모리 결합
+
+   3. 프로덕션 준비
+      - 비동기 처리 (Async): FastAPI와 통합
+        ```
+         async def agent_node(state):
+         result = await llm.ainvoke(messages)
+        ```
+      - 에러 복구 전략: 재시도, 폴백, Circuit Breaker
+      - 모니터링: LangSmith 연동, 로깅, 성능 추적
+      - 배포: Docker, Kubernetes, 클라우드 서빙
+      
+   4. 도메인 특화
+      - RAG Agent: 문서 검색 + 답변 생성
+      - 코드 생성 Agent: 코딩 어시스턴트
+      - 데이터 분석 Agent: CSV/DB 분석 자동화
+      - 멀티모달 Agent: 이미지 + 텍스트 처리
