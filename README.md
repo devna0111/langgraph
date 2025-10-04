@@ -202,15 +202,15 @@ for i, state in enumerate(app.get_state_history(config)):
    app.update_state(config, values=None, as_node="classifier")
    ```
 - [디버깅] 어느 단계에서 문제가 생겼는지 추적
-```
-for state in app.get_state_history(config):
-   print(state.values)
-```
+   ```
+   for state in app.get_state_history(config):
+      print(state.values)
+   ```
 - [작업 재개] 서버 재시작 후에도 같은 지점부터 이어서
-```
-   snapshot = app.get_state(config)
-   app.invoke(None, config=config)  # 이어서 실행
-```
+   ```
+      snapshot = app.get_state(config)
+      app.invoke(None, config=config)  # 이어서 실행
+   ```
 
 
 
