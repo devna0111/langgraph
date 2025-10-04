@@ -168,6 +168,7 @@ memory_content = memory.load_memory_variables({})
 - 사용자별 세션관리 
 </br>
 [사용 방식]</br>
+
 [저장]
 ```
 workflow = StateGraph(State:TypedDict)
@@ -175,6 +176,7 @@ workflow = StateGraph(State:TypedDict)
 memory = MemorySaver()
 app = workflow.compile(checkpointer=memory)
 ```
+
 [저장 상태 조회]
 ```
 snapshot = app.get_state(config)
@@ -184,6 +186,7 @@ print(f"현재 상태: {snapshot.values}")
 print(f"다음 노드: {snapshot.next}")
 print(f"체크포인트 ID: {snapshot.config['configurable']['checkpoint_id']}")
 ```
+
 [전체 히스토리 조회]
 ```
 print("\n=== 전체 실행 히스토리 ===")
@@ -205,7 +208,7 @@ for i, state in enumerate(app.get_state_history(config)):
 - 서버 재시작 후에도 같은 지점부터 이어서
    snapshot = app.get_state(config)
    app.invoke(None, config=config)  # 이어서 실행
-
+```
 
 
 ### 멀티 에이전트
